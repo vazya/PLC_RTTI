@@ -128,8 +128,24 @@ void withoutRTTI()
 
 void notFun()
 {
-	NEW( A*, a );
-	cout << "RTTI size = "<< RTTI.size() << endl;
+	NEW( A*, pa );
+	NEW( A, a );
+	NEW( B*, pb );
+	NEW( B, b );
+	NEW( B, bb );
+	cout << "RTTI size = " << RTTI.size() << endl;
+
+
+	cout << "pa.name = " << TYPEID( pa ).Name() << endl;
+	cout << "pa.hash_code = " << TYPEID( pa ).HashCode() << endl;
+	cout << "a.name = " << TYPEID( a ).Name() << endl;
+	cout << "a.hash_code = " << TYPEID( a ).HashCode() << endl;
+	cout << "pb.name = " << TYPEID( pb ).Name() << endl;
+	cout << "pb.hash_code = " << TYPEID( pb ).HashCode() << endl;
+	cout << "b.name = " << TYPEID( b ).Name() << endl;
+	cout << "b.hash_code = " << TYPEID( b ).HashCode() << endl;
+	cout << "bb.name = " << TYPEID( bb ).Name() << endl;
+	cout << "bb.hash_code = " << TYPEID( bb ).HashCode() << endl;
 }
 
 int main()

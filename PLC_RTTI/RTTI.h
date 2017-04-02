@@ -5,7 +5,7 @@
 using namespace std;
 
 struct TypeInfo {
-	TypeInfo( const string& theName ) : name( theName ) {}
+	TypeInfo( string typeName = string( "" ) ) : name( typeName ) {}
 	size_t HashCode() { return hash<string>()( name ); }
 	string& Name() { return name; }
 	
@@ -14,6 +14,12 @@ struct TypeInfo {
 
 static map<string, TypeInfo> RTTI;
 
+TypeInfo TypeId( string objName )
+{
+	//return TypeInfo();
+	return RTTI[objName];
+}
+
 void newObj( string typeName, string objName )
 {
 	TypeInfo typeInfo( typeName );
@@ -21,3 +27,5 @@ void newObj( string typeName, string objName )
 }
 
 #define NEW(T, o) newObj((#T), (#o))
+
+#define TYPEID(o) TypeId((#o))
