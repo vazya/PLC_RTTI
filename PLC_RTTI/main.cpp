@@ -106,22 +106,37 @@ void notFun()
 	cout << "zz.hash_code = " << TYPEID( zz ).HashCode() << endl;
 }
 
-template<typename T>
-static T* constructNewObj()
-{
-	return new T();
-}
-
-#define VZ(T) constructNewObj<T>()
+//template<typename T>
+//static T* constructNewObj()
+//{
+//	return new T();
+//}
+//
+//#define VZ(T) constructNewObj<T>()
+//
+//void veryNotFun()
+//{
+//	int* a = constructNewObj<int>();
+//	cout << a << endl;
+//	A* pa = constructNewObj<A>();
+//	cout << "pa name = "; pa->PrintName();
+//	B* pb = VZ( B );
+//	cout << "pb name = "; pb->PrintName();
+//}
 
 void veryNotFun()
 {
-	int* a = constructNewObj<int>();
-	cout << a << endl;
-	A* pa = constructNewObj<A>();
-	cout << "pa name = "; pa->PrintName();
-	B* pb = VZ( B );
-	cout << "pb name = "; pb->PrintName();
+	A* a = NEW( A, a );
+	cout << "a->name = "; a->PrintName();
+	cout << "a.name = " << TYPEID( a ).Name() << endl;
+	cout << "a.hash_code = " << TYPEID( a ).HashCode() << endl;
+
+	B* b = NEW( B, b );
+	cout << "b->name = "; b->PrintName();
+	cout << "b.name = " << TYPEID( b ).Name() << endl;
+	cout << "b.hash_code = " << TYPEID( b ).HashCode() << endl;
+
+	cout << "RTTI size = " << RTTI.size() << endl;
 }
 
 int main()
