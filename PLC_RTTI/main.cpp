@@ -6,32 +6,117 @@ using namespace std;
 class A {
 public:
 	A() { cout << "A constructor \n"; }
-	virtual void PrintName() { cout << "A" << endl; }
-	//~A() { cout << "A destructor \n"; }
-	virtual ~A() { /*cout << "A destructor \n";*/ }
+	void PrintName() { cout << "A" << endl; }
+	~A() {}
+	//virtual void PrintName() { cout << "A" << endl; }
+	//virtual ~A() {}
 };
 
 class B : public A {
 public:
 	B() { cout << "B constructor \n"; }
-	virtual void PrintName() { cout << "B" << endl; }
-	//~B() { cout << "B destructor \n"; }
-	virtual ~B() { /*cout << "B destructor \n";*/ }
+	void PrintName() { cout << "B" << endl; }
+	~B() {}
+	//virtual void PrintName() { cout << "B" << endl; }
+	//virtual ~B() {}
 };
-
+ 
 void fun()
 {
-	A* a = new A();
-	cout << "A* a->PrintName() = "; a->PrintName();
-	A* b = new B();
-	cout << "A* b->PrintName() = "; b->PrintName();
-	B* bb = new B();
-	cout << "B* bb->PrintName() = "; bb->PrintName();
-	//B* ba = new A(); так нельзя
+	A* c = new A();
+	if( c ) {
+		cout << "A* c = new A() succeded \n";
+		cout << "c name : " << typeid( *c ).name() << endl;
+		cout << "c hash : " << typeid( *c ).hash_code() << endl << endl;
+		delete c;
+	} else {
+		cout << "A* c = new A() failed \n";
+	}
 
-	delete a;
-	delete b;
-	delete bb;
+	A* d = new B();
+	if( d ) {
+		cout << "A* d = new B() succeded \n";
+		cout << "d name : " << typeid( *d ).name() << endl;
+		cout << "d hash : " << typeid( *d ).hash_code() << endl << endl;
+		delete d;
+	} else {
+		cout << "A* d = new B() failed \n";
+	}
+
+	B* e = new B();
+	if( e ) {
+		cout << "B* e = new B() succeded \n";
+		cout << "e name : " << typeid( *e ).name() << endl;
+		cout << "e hash : " << typeid( *e ).hash_code() << endl << endl;
+		delete e;
+	} else {
+		cout << "B* e = new B() failed \n";
+	}
+
+	B* f( 0 );
+	try {
+		//f = new A(); так нельзя
+	}
+	catch( exception& e ) {
+		cout << "Exception: " << e.what() << endl;
+	}
+	if( f ) {
+		cout << "B* f = new A() succeded \n";
+		cout << "f name : " << typeid( *f ).name() << endl;
+		cout << "f hash : " << typeid( *f ).hash_code() << endl << endl;
+		delete f;
+	} else {
+		cout << "B* f = new A() failed \n";
+	}
+}
+
+void notFun()
+{
+	A* c = NEW( A, c );
+	if( c ) {
+		cout << "A* c = NEW( A, c ) succeded \n";
+		cout << "c name : " << TYPEID( *c ).Name() << endl;
+		cout << "c hash : " << TYPEID( *c ).HashCode() << endl << endl;
+		delete c;
+	} else {
+		cout << "A* c = NEW( A, c ) failed \n";
+	}
+
+	A* d = NEW( B, d );
+	if( d ) {
+		cout << "A* d = NEW( B, d ) succeded \n";
+		cout << "d name : " << TYPEID( *d ).Name() << endl;
+		cout << "d hash : " << TYPEID( *d ).HashCode() << endl << endl;
+		delete d;
+	} else {
+		cout << "A* d = NEW( B, d ) failed \n";
+	}
+
+	B* e = NEW( B, e );
+	if( e ) {
+		cout << "B* e = NEW( B, e ) succeded \n";
+		cout << "e name : " << TYPEID( *e ).Name() << endl;
+		cout << "e hash : " << TYPEID( *e ).HashCode() << endl << endl;
+		delete e;
+	} else {
+		cout << "B* e = NEW( B, e ) failed \n";
+	}
+
+	B* f( 0 );
+	try {
+		//f = NEW( A, f ); так нельзя
+	}
+	catch( exception& e ) {
+		cout << "Exception: " << e.what() << endl;
+	}
+	if( f ) {
+		cout << "B* f = NEW( A, f ) succeded \n";
+		cout << "f name : " << TYPEID( *f ).Name() << endl;
+		cout << "f hash : " << TYPEID( *f ).HashCode() << endl << endl;
+		delete f;
+	} else {
+		cout << "B* f = NEW( A, f ) failed \n";
+	}
 }
 
 void withRTTI()
@@ -39,8 +124,9 @@ void withRTTI()
 	A* c = dynamic_cast< A* >( new A() );
 	if( c ) {
 		cout << "A* c = dynamic_cast<A*>( new A() ) succeded \n";
-		cout << "c name : " << typeid( c ).name() << endl;
-		cout << "c hash : " << typeid( c ).hash_code() << endl << endl;
+		cout << "c->Name: "; c->PrintName();
+		cout << "c name : " << typeid( *c ).name() << endl;
+		cout << "c hash : " << typeid( *c ).hash_code() << endl << endl;
 		delete c;
 	} else {
 		cout << "A* c = dynamic_cast<A*>( new A() ) failed \n";
@@ -49,8 +135,9 @@ void withRTTI()
 	A* d = dynamic_cast< A* >( new B() );
 	if( d ) {
 		cout << "A* d = dynamic_cast<A*>( new B() ) succeded \n";
-		cout << "d name : " << typeid( d ).name() << endl;
-		cout << "d hash : " << typeid( d ).hash_code() << endl << endl;
+		cout << "d->Name: "; d->PrintName();
+		cout << "d name : " << typeid( *d ).name() << endl;
+		cout << "d hash : " << typeid( *d ).hash_code() << endl << endl;
 		delete d;
 	} else {
 		cout << "A* d = dynamic_cast<A*>( new B() ) failed \n";
@@ -59,8 +146,9 @@ void withRTTI()
 	B* e = dynamic_cast< B* >( new B() );
 	if( e ) {
 		cout << "B* e = dynamic_cast<B*>( new B() ) succeded \n";
-		cout << "e name : " << typeid( e ).name() << endl;
-		cout << "e hash : " << typeid( e ).hash_code() << endl << endl;
+		cout << "e->Name: "; e->PrintName();
+		cout << "e name : " << typeid( *e ).name() << endl;
+		cout << "e hash : " << typeid( *e ).hash_code() << endl << endl;
 		delete e;
 	} else {
 		cout << "B* e = dynamic_cast<B*>( new B() ) failed \n";
@@ -68,83 +156,121 @@ void withRTTI()
 
 	B* f( 0 );
 	try {
-		f = dynamic_cast< B* >( new A() );
+		//f = dynamic_cast< B* >( new A() );
 	} 
 	catch( exception& e ) {
 		cout << "Exception: " << e.what() << endl;
 	}
 	if( f ) {
 		cout << "B* f = dynamic_cast<B*>( new A() ) succeded \n";
-		cout << "f name : " << typeid( f ).name() << endl;
-		cout << "f hash : " << typeid( f ).hash_code() << endl << endl;
+		cout << "f->Name: "; f->PrintName();
+		cout << "f name : " << typeid( *f ).name() << endl;
+		cout << "f hash : " << typeid( *f ).hash_code() << endl << endl;
 		delete f;
 	} else {
 		cout << "B* f = dynamic_cast<B*>( new A() ) failed \n";
 	}
 }
 
-void notFun()
+void withoutRTTI()
 {
-	NEW( A*, pa );
-	NEW( A, a );
-	NEW( B*, pb );
-	NEW( B, b );
-	NEW( B, bb );
-	cout << "RTTI size = " << RTTI.size() << endl;
+	A* c = NEW( A, c );
+	if( c ) {
+		cout << "A* c = NEW( A, c ) succeded \n";
+		cout << "c->Name: "; c->PrintName();
+		cout << "c name : " << TYPEID( *c ).Name() << endl;
+		cout << "c hash : " << TYPEID( *c ).HashCode() << endl << endl;
+		delete c;
+	} else {
+		cout << "A* c = NEW( A, c ) failed \n";
+	}
 
-	cout << "pa.name = " << TYPEID( pa ).Name() << endl;
-	cout << "pa.hash_code = " << TYPEID( pa ).HashCode() << endl;
-	cout << "a.name = " << TYPEID( a ).Name() << endl;
-	cout << "a.hash_code = " << TYPEID( a ).HashCode() << endl;
-	cout << "pb.name = " << TYPEID( pb ).Name() << endl;
-	cout << "pb.hash_code = " << TYPEID( pb ).HashCode() << endl;
-	cout << "b.name = " << TYPEID( b ).Name() << endl;
-	cout << "b.hash_code = " << TYPEID( b ).HashCode() << endl;
-	cout << "bb.name = " << TYPEID( bb ).Name() << endl;
-	cout << "bb.hash_code = " << TYPEID( bb ).HashCode() << endl;
-	cout << "zz.name = " << TYPEID( zz ).Name() << endl;
-	cout << "zz.hash_code = " << TYPEID( zz ).HashCode() << endl;
+	A* d = NEW( B, d );
+	if( d ) {
+		cout << "A* d = NEW( B, d ) succeded \n";
+		cout << "d->Name: "; d->PrintName();
+		cout << "d name : " << TYPEID( *d ).Name() << endl;
+		cout << "d hash : " << TYPEID( *d ).HashCode() << endl << endl;
+		delete d;
+	} else {
+		cout << "A* d = NEW( B, d ) failed \n";
+	}
+
+	B* e = NEW( B, e );
+	if( e ) {
+		cout << "B* e = NEW( B, e ) succeded \n";
+		cout << "e->Name: "; e->PrintName();
+		cout << "e name : " << TYPEID( *e ).Name() << endl;
+		cout << "e hash : " << TYPEID( *e ).HashCode() << endl << endl;
+		delete e;
+	} else {
+		cout << "B* e = NEW( B, e ) failed \n";
+	}
+
+	B* f( 0 );
+	try {
+		//f = NEW( A, f ); так нельзя
+	}
+	catch( exception& e ) {
+		cout << "Exception: " << e.what() << endl;
+	}
+	if( f ) {
+		cout << "B* f = NEW( A, f ) succeded \n";
+		cout << "f->Name: "; f->PrintName();
+		cout << "f name : " << TYPEID( *f ).Name() << endl;
+		cout << "f hash : " << TYPEID( *f ).HashCode() << endl << endl;
+		delete f;
+	} else {
+		cout << "B* f = NEW( A, f ) failed \n";
+	}
 }
-
-//template<typename T>
-//static T* constructNewObj()
-//{
-//	return new T();
-//}
-//
-//#define VZ(T) constructNewObj<T>()
-//
-//void veryNotFun()
-//{
-//	int* a = constructNewObj<int>();
-//	cout << a << endl;
-//	A* pa = constructNewObj<A>();
-//	cout << "pa name = "; pa->PrintName();
-//	B* pb = VZ( B );
-//	cout << "pb name = "; pb->PrintName();
-//}
 
 void veryNotFun()
 {
-	A* a = NEW( A, a );
-	cout << "a->name = "; a->PrintName();
-	cout << "a.name = " << TYPEID( a ).Name() << endl;
-	cout << "a.hash_code = " << TYPEID( a ).HashCode() << endl;
+	A* d1 = dynamic_cast< A* >( new B() );
+	if( d1 ) {
+		cout << "A* d1 = dynamic_cast<A*>( new B() ) succeded \n";
+		cout << "d1->Name: "; d1->PrintName();
+		cout << "d1 name : " << typeid( d1 ).name() << endl;
+		cout << "d1 hash : " << typeid( d1 ).hash_code() << endl << endl;
+		delete d1;
+	} else {
+		cout << "A* d1 = dynamic_cast<A*>( new B() ) failed \n";
+	}
 
-	B* b = NEW( B, b );
-	cout << "b->name = "; b->PrintName();
-	cout << "b.name = " << TYPEID( b ).Name() << endl;
-	cout << "b.hash_code = " << TYPEID( b ).HashCode() << endl;
+	A* d = NEW( B, d );
+	if( d ) {
+		cout << "A* d = NEW( B, d ) succeded \n";
+		cout << "d->Name: "; d->PrintName();
+		cout << "d name : " << TYPEID( d ).Name() << endl;
+		cout << "d hash : " << TYPEID( d ).HashCode() << endl << endl;
+		delete d;
+	} else {
+		cout << "A* d = NEW( B, d ) failed \n";
+	}
+}
 
-	cout << "RTTI size = " << RTTI.size() << endl;
+void f()
+{
+	cout << typeid( new A() ).name() << endl;
+	cout << typeid( new B() ).name() << endl;
+	A* a = new B();
+	cout << typeid( *a ).name() << endl;
+	a->PrintName();
+	cout << typeid( dynamic_cast< A* >( new B ) ).name() << endl;
 }
 
 int main()
 {
-	//fun();
-	//withRTTI();
+	//f();
+	
+	fun(); cout << endl;
 	//notFun();
-	veryNotFun();
+
+	withRTTI(); cout << endl;
+	//withoutRTTI();
+	
+	//veryNotFun();
 	system( "pause" );
 	return 0;
 }

@@ -23,11 +23,11 @@ template<typename T>
 static T* newObj( string typeName, string objName )
 {
 	TypeInfo typeInfo( typeName );
-	RTTI.insert( pair<string, TypeInfo>( objName, typeInfo ) );
+	RTTI.insert( pair<string, TypeInfo>( "*" + objName, typeInfo ) );
 	return new T();
 }
 
 // нужно в качестве параметра передавать имя объекта
-#define NEW(T, o) newObj<T>((#T), (#o))
+#define NEW( T, o ) newObj<T>( (#T), (#o) )
 
-#define TYPEID(o) TypeId((#o))
+#define TYPEID( o ) TypeId( (#o) )
