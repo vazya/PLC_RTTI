@@ -39,49 +39,6 @@ void withRTTI()
 	A* c = dynamic_cast< A* >( new A() );
 	if( c ) {
 		cout << "A* c = dynamic_cast<A*>( new A() ) succeded \n";
-	} else {
-		cout << "A* c = dynamic_cast<A*>( new A() ) failed \n";
-	}
-	cout << "c name : " << typeid( c ).name() << endl;
-	cout << "c hash : " << typeid( c ).hash_code() << endl << endl;
-	delete c;
-
-	A* d = dynamic_cast< A* >( new B() );
-	if( d ) {
-		cout << "A* d = dynamic_cast<A*>( new B() ) succeded \n";
-	} else {
-		cout << "A* d = dynamic_cast<A*>( new B() ) failed \n";
-	}
-	cout << "d name : " << typeid( d ).name() << endl;
-	cout << "d hash : " << typeid( d ).hash_code() << endl << endl;
-	delete d;
-
-	B* e = dynamic_cast< B* >( new B() );
-	if( e ) {
-		cout << "B* e = dynamic_cast<B*>( new B() ) succeded \n";
-	} else {
-		cout << "B* e = dynamic_cast<B*>( new B() ) failed \n";
-	}
-	cout << "e name : " << typeid( e ).name() << endl;
-	cout << "e hash : " << typeid( e ).hash_code() << endl << endl;
-	delete e;
-
-	//B* f = dynamic_cast< B* >( new A() );
-	//if( f ) {
-	//	cout << "B* f = dynamic_cast<B*>( new A() ) succeded \n";
-	//} else {
-	//	cout << "B* f = dynamic_cast<B*>( new A() ) failed \n";
-	//}
-	//cout << "f name : " << typeid( f ).name() << endl;
-	//cout << "f hash : " << typeid( f ).hash_code() << endl << endl;
-	//delete f;
-}
-
-void withoutRTTI()
-{
-	A* c = dynamic_cast< A* >( new A() );
-	if( c ) {
-		cout << "A* c = dynamic_cast<A*>( new A() ) succeded \n";
 		cout << "c name : " << typeid( c ).name() << endl;
 		cout << "c hash : " << typeid( c ).hash_code() << endl << endl;
 		delete c;
@@ -135,7 +92,6 @@ void notFun()
 	NEW( B, bb );
 	cout << "RTTI size = " << RTTI.size() << endl;
 
-
 	cout << "pa.name = " << TYPEID( pa ).Name() << endl;
 	cout << "pa.hash_code = " << TYPEID( pa ).HashCode() << endl;
 	cout << "a.name = " << TYPEID( a ).Name() << endl;
@@ -146,14 +102,34 @@ void notFun()
 	cout << "b.hash_code = " << TYPEID( b ).HashCode() << endl;
 	cout << "bb.name = " << TYPEID( bb ).Name() << endl;
 	cout << "bb.hash_code = " << TYPEID( bb ).HashCode() << endl;
+	cout << "zz.name = " << TYPEID( zz ).Name() << endl;
+	cout << "zz.hash_code = " << TYPEID( zz ).HashCode() << endl;
+}
+
+template<typename T>
+static T* constructNewObj()
+{
+	return new T();
+}
+
+#define VZ(T) constructNewObj<T>()
+
+void veryNotFun()
+{
+	int* a = constructNewObj<int>();
+	cout << a << endl;
+	A* pa = constructNewObj<A>();
+	cout << "pa name = "; pa->PrintName();
+	B* pb = VZ( B );
+	cout << "pb name = "; pb->PrintName();
 }
 
 int main()
 {
 	//fun();
 	//withRTTI();
-	//withoutRTTI();
-	notFun();
+	//notFun();
+	veryNotFun();
 	system( "pause" );
 	return 0;
 }

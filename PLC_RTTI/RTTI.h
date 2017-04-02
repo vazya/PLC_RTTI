@@ -16,9 +16,9 @@ static map<string, TypeInfo> RTTI;
 
 TypeInfo TypeId( string objName )
 {
-	//return TypeInfo();
 	return RTTI[objName];
 }
+
 
 void newObj( string typeName, string objName )
 {
