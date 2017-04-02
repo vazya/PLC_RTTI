@@ -1,5 +1,6 @@
 #include <iostream>
 #include <typeinfo>
+#include "RTTI.h"
 using namespace std;
 
 class A {
@@ -125,11 +126,18 @@ void withoutRTTI()
 	}
 }
 
+void notFun()
+{
+	NEW( A*, a );
+	cout << "RTTI size = "<< RTTI.size() << endl;
+}
+
 int main()
 {
 	//fun();
 	//withRTTI();
-	withoutRTTI();
+	//withoutRTTI();
+	notFun();
 	system( "pause" );
 	return 0;
 }
