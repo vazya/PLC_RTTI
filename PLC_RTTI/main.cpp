@@ -193,7 +193,7 @@ void withoutRTTI()
 	//auto iter = ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].find( ( "A*" ) );
 	//assert( iter != ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].end() );
 
-	A* c = DYNAMIC_CAST( A*, cc );
+	A* c = DYNAMIC_CAST( A*, cc, c );
 	//A* c = DYNAMIC_CAST( A*, NEW( A, c ) )
 	if( c ) {
 		cout << "A* c =  DYNAMIC_CAST( A*, NEW( A, c ) ) succeded \n";
@@ -206,7 +206,7 @@ void withoutRTTI()
 	}
 
 	auto dd = NEW( B, dd );
-	A* d = DYNAMIC_CAST( A*, dd );
+	A* d = DYNAMIC_CAST( A*, dd, d );
 	//A* d = DYNAMIC_CAST( A*, NEW( B, d ) );
 	if( d ) {
 		cout << "A* d = DYNAMIC_CAST( A*, NEW( B, d ) ) \n";
@@ -219,7 +219,7 @@ void withoutRTTI()
 	}
 
 	auto ee = NEW( B, ee );
-	B* e = DYNAMIC_CAST( B*, ee );
+	B* e = DYNAMIC_CAST( B*, ee, e );
 	//B* e = DYNAMIC_CAST( B*, NEW( B, e ) );
 	if( e ) {
 		cout << "B* e = DYNAMIC_CAST( B*, NEW( B, e ) ) succeded \n";
@@ -232,7 +232,7 @@ void withoutRTTI()
 	}
 
 	auto kk = NEW( C, kk );
-	C* k = DYNAMIC_CAST( C*, kk );
+	C* k = DYNAMIC_CAST( C*, kk, k );
 	if( k ) {
 		cout << "C* k =  DYNAMIC_CAST( C*, NEW( C, k ) ) succeded \n";
 		cout << "k->Name: "; k->PrintName();
@@ -244,7 +244,7 @@ void withoutRTTI()
 	}
 
 	auto jj = NEW( C, jj );
-	B* j = DYNAMIC_CAST( B*, jj );
+	B* j = DYNAMIC_CAST( B*, jj, j );
 	if( j ) {
 		cout << "B* j =  DYNAMIC_CAST( B*, NEW( C, j ) ) succeded \n";
 		cout << "j->Name: "; j->PrintName();
@@ -256,7 +256,7 @@ void withoutRTTI()
 	}
 
 	auto tt = NEW( C, tt );
-	A* t = DYNAMIC_CAST( A*, tt );
+	A* t = DYNAMIC_CAST( A*, tt, t );
 	if( t ) {
 		cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) succeded \n";
 		cout << "t->Name: "; t->PrintName();
@@ -371,7 +371,7 @@ int main()
 	//fun(); cout << endl;
 	//notFun(); cout << endl;
 
-	//withRTTI(); cout << endl;
+	withRTTI(); cout << endl;
 	withoutRTTI(); cout << endl; //<-закомменченные методы должны падать и собственно падают
 	
 	//veryNotFun();

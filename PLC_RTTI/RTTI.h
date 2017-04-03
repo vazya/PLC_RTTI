@@ -16,32 +16,8 @@ struct TypeInfo {
 static map<string, TypeInfo> RTTI;
 static map<string, set<string>> ANCESTORS;
 
-//static void checkDynamicCast( string typeName, string objName )
-//{
-//	auto it = RTTI.find( objName );
-//	if( it == RTTI.end() ) {
-//		cout << "Object not found" << endl;
-//		assert( false );
-//	}
-//	TypeInfo typeInfo = it->second;
-//	string name = typeInfo.Name();
-//
-//	if( ANCESTORS[name].find( typeName ) == ANCESTORS[name].end() ) {
-//		cout << "Bad dynamic cast" << endl;
-//		assert( false );
-//	}
-//}
-
 static void regAncestors( string derived, string base )
 {
-	//if( RTTI.find( base ) == RTTI.end() ) {
-	//	cout << "Unknown type of base" << endl;
-	//	assert( false );
-	//}
-	//if( RTTI.find( derived ) == RTTI.end() ) {
-	//	cout << "Unknown type of derived" << endl;
-	//	assert( false );
-	//}
 	if( ANCESTORS.find( base ) == ANCESTORS.end() ) {
 		ANCESTORS.insert( pair<string, set<string>>( base, set<string>( {base+'*'} ) ) );
 	}
@@ -62,6 +38,14 @@ TypeInfo TypeId( string objName )
 	return RTTI[objName];
 }
 
+static bool regObj( string objName, string newObjName )
+{
+	string typeName = TypeId( objName ).Name();
+	TypeInfo typeInfo( typeName );
+	RTTI.insert( pair<string, TypeInfo>( "*"+newObjName, typeInfo ) );
+	return true;
+}
+
 template<typename T>
 static T* newObj( string typeName, string objName )
 {
@@ -76,11 +60,9 @@ static T* newObj( string typeName, string objName )
 
 #define TYPEID( o ) TypeId( (#o) )
 
-#define DYNAMIC_CAST( T, o ) (assert( RTTI.find( (#o) ) != RTTI.end() ),\
+#define DYNAMIC_CAST( T, o, n ) (assert( RTTI.find( (#o) ) != RTTI.end() ),\
 assert( ANCESTORS[(RTTI.find( (#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( (#o) )->second).Name()].end() ),\
+assert( regObj( (#o), (#n) ) ),\
 reinterpret_cast<T>( o ) )
-
-//assert( ANCESTORS[(RTTI.find( '*'+(#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( '*'+(#o) )->second).Name()].end() ),\
-//reinterpret_cast<T>( o ) )
 
 #define EXTEND( D, B ) regAncestors( (#D), (#B) )
