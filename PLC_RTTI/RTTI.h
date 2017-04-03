@@ -76,9 +76,8 @@ static T* newObj( string typeName, string objName )
 
 #define TYPEID( o ) TypeId( (#o) )
 
-#define DYNAMIC_CAST( T, o ) (\
-cout << (#o),\
-assert( RTTI.find( (#o) ) != RTTI.end() ),\
+#define DYNAMIC_CAST( T, o ) (assert( RTTI.find( (#o) ) != RTTI.end() ),\
+assert( ANCESTORS[(RTTI.find( (#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( (#o) )->second).Name()].end() ),\
 reinterpret_cast<T>( o ) )
 
 //assert( ANCESTORS[(RTTI.find( '*'+(#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( '*'+(#o) )->second).Name()].end() ),\
