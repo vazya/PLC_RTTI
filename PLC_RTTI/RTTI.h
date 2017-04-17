@@ -19,10 +19,10 @@ static map<string, set<string>> ANCESTORS;
 static void regAncestors( string derived, string base )
 {
 	if( ANCESTORS.find( base ) == ANCESTORS.end() ) {
-		ANCESTORS.insert( pair<string, set<string>>( base, set<string>( {base+'*'} ) ) );
+		ANCESTORS.insert( pair<string, set<string>>( base, set<string>( { base + '*' } ) ) );
 	}
 	if( ANCESTORS.find( derived ) == ANCESTORS.end() ) {
-		ANCESTORS.insert( pair<string, set<string>>( derived, set<string>( {derived+'*' } ) ) );
+		ANCESTORS.insert( pair<string, set<string>>( derived, set<string>( { derived + '*' } ) ) );
 	}
 
 	auto baseAncestros = ANCESTORS[base];
@@ -30,7 +30,7 @@ static void regAncestors( string derived, string base )
 	for( auto it = baseAncestros.begin(); it != baseAncestros.end(); it++ ) {
 		derivedAncestors->second.insert( *it );
 	}
-	derivedAncestors->second.insert( base+'*' );
+	derivedAncestors->second.insert( base + '*' );
 }
 
 TypeInfo TypeId( string objName )
@@ -42,7 +42,7 @@ static bool regObj( string objName, string newObjName )
 {
 	string typeName = TypeId( objName ).Name();
 	TypeInfo typeInfo( typeName );
-	RTTI.insert( pair<string, TypeInfo>( "*"+newObjName, typeInfo ) );
+	RTTI.insert( pair<string, TypeInfo>( "*" + newObjName, typeInfo ) );
 	return true;
 }
 
@@ -60,7 +60,7 @@ static T* newObj( string typeName, string objName )
 
 #define TYPEID( o ) TypeId( (#o) )
 
-#define DYNAMIC_CAST( T, o, n ) (assert( RTTI.find( (#o) ) != RTTI.end() ),\
+#define DYNAMIC_CAST( T, o, n ) ( assert( RTTI.find( (#o) ) != RTTI.end() ),\
 assert( ANCESTORS[(RTTI.find( (#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( (#o) )->second).Name()].end() ),\
 assert( regObj( (#o), (#n) ) ),\
 reinterpret_cast<T>( o ) )
