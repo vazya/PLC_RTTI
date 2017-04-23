@@ -5,26 +5,28 @@ using namespace std;
 
 class A {
 public:
-	A() { c = 'A'; cout << "A constructor \n"; }
+	A() { c = 'A'; c = 111; cout << "A constructor \n"; }
 	//void PrintName() { cout << "A" << endl; }
 	//~A() {}
 	virtual void PrintName() { cout << c << endl; }
 	virtual ~A() {}
-	char c;
+	int c;
 };
 
 class B : public A {
 public:
-	B() { c = 'B'; cout << "B constructor \n"; }
+	int b;
+	B() { b = 777;  c = 'B'; c = 222; cout << "B constructor \n"; }
 	//void PrintName() { cout << "B" << endl; }
 	//~B() {}
 	virtual void PrintName() { cout << c << c << endl; }
 	virtual ~B() {}
 };
 
-class C : public B {
+class C : public A {
 public:
-	C() { c = 'C'; cout << "C constructor \n"; }
+	int cc;
+	C() { cc = 1488;  c = 'C';  c = 333; cout << "C constructor \n"; }
 	//void PrintName() { cout << "C" << endl; }
 	//~C() {}
 	virtual void PrintName() { cout << c << c << c << endl; }
@@ -33,7 +35,8 @@ public:
 
 class D : public B, public C {
 public:
-	D() { B::c = 'BD'; C::c = 'CD'; cout << "D constructor \n"; }
+	int d;
+	D() { d = 666;  B::c = 'D'; C::c = 'd'; B::c = 223; C::c = 332; cout << "D constructor \n"; }
 	//void PrintName() { cout << "C" << endl; }
 	//~C() {}
 	virtual void PrintName() { cout << B::c << B::c << C::c << C::c << endl; }
@@ -198,85 +201,138 @@ void withoutRTTI()
 {
 	EXTEND( B, A );
 	EXTEND( C, B );
+	EXTEND( D, B );
+	EXTEND( D, C );
 
-	auto cc = NEW( A, cc );
-	//auto it = RTTI.find( "cc" );
-	//assert( it != RTTI.end() );
-	//auto iter = ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].find( ( "A*" ) );
-	//assert( iter != ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].end() );
+	EXTENDORDER( B, vector<string>{ "A" } );
+	EXTENDORDER( C, vector<string>{ "A" } );
+	vector<string> dExtendorder{ "B", "C" };
+	EXTENDORDER( D, dExtendorder );
+	//vector<string> bExtendorder{ 'A' } ;
+	//auto cc = NEW( A, cc );
+	////auto it = RTTI.find( "cc" );
+	////assert( it != RTTI.end() );
+	////auto iter = ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].find( ( "A*" ) );
+	////assert( iter != ANCESTORS[( RTTI.find( ( "cc" ) )->second ).Name()].end() );
 
-	A* c = DYNAMIC_CAST( A*, cc, c );
-	//A* c = DYNAMIC_CAST( A*, NEW( A, c ) )
-	if( c ) {
-		cout << "A* c =  DYNAMIC_CAST( A*, NEW( A, c ) ) succeded \n";
-		cout << "c->Name: "; c->PrintName();
-		cout << "c name : " << TYPEID( *c ).Name() << endl;
-		cout << "c hash : " << TYPEID( *c ).HashCode() << endl << endl;
-		delete c;
+	//A* c = DYNAMIC_CAST( A*, cc, c );
+	////A* c = DYNAMIC_CAST( A*, NEW( A, c ) )
+	//if( c ) {
+	//	cout << "A* c =  DYNAMIC_CAST( A*, NEW( A, c ) ) succeded \n";
+	//	cout << "c->Name: "; c->PrintName();
+	//	cout << "c name : " << TYPEID( *c ).Name() << endl;
+	//	cout << "c hash : " << TYPEID( *c ).HashCode() << endl << endl;
+	//	delete c;
+	//} else {
+	//	cout << "A* c =  DYNAMIC_CAST( A*, NEW( A, c ) ) failed \n";
+	//}
+
+	//auto dd = NEW( B, dd );
+	//A* d = DYNAMIC_CAST( A*, dd, d );
+	////A* d = DYNAMIC_CAST( A*, NEW( B, d ) );
+	//if( d ) {
+	//	cout << "A* d = DYNAMIC_CAST( A*, NEW( B, d ) ) \n";
+	//	cout << "d->Name: "; d->PrintName();
+	//	cout << "d name : " << TYPEID( *d ).Name() << endl;
+	//	cout << "d hash : " << TYPEID( *d ).HashCode() << endl << endl;
+	//	delete d;
+	//} else {
+	//	cout << "A* d = DYNAMIC_CAST( A*, NEW( B, d ) ) failed \n";
+	//}
+
+	//auto ee = NEW( B, ee );
+	//B* e = DYNAMIC_CAST( B*, ee, e );
+	////B* e = DYNAMIC_CAST( B*, NEW( B, e ) );
+	//if( e ) {
+	//	cout << "B* e = DYNAMIC_CAST( B*, NEW( B, e ) ) succeded \n";
+	//	cout << "e->Name: "; e->PrintName();
+	//	cout << "e name : " << TYPEID( *e ).Name() << endl;
+	//	cout << "e hash : " << TYPEID( *e ).HashCode() << endl << endl;
+	//	delete e;
+	//} else {
+	//	cout << "B* e = DYNAMIC_CAST( B*, NEW( B, e ) ) failed \n";
+	//}
+
+	//auto kk = NEW( C, kk );
+	//C* k = DYNAMIC_CAST( C*, kk, k );
+	//if( k ) {
+	//	cout << "C* k =  DYNAMIC_CAST( C*, NEW( C, k ) ) succeded \n";
+	//	cout << "k->Name: "; k->PrintName();
+	//	cout << "k name : " << TYPEID( *k ).Name() << endl;
+	//	cout << "k hash : " << TYPEID( *k ).HashCode() << endl << endl;
+	//	delete k;
+	//} else {
+	//	cout << "C* k =  DYNAMIC_CAST( C*, NEW( C, k ) ) failed \n";
+	//}
+
+	//auto jj = NEW( C, jj );
+	//B* j = DYNAMIC_CAST( B*, jj, j );
+	//if( j ) {
+	//	cout << "B* j =  DYNAMIC_CAST( B*, NEW( C, j ) ) succeded \n";
+	//	cout << "j->Name: "; j->PrintName();
+	//	cout << "j name : " << TYPEID( *j ).Name() << endl;
+	//	cout << "j hash : " << TYPEID( *j ).HashCode() << endl << endl;
+	//	delete j;
+	//} else {
+	//	cout << "B* j =  DYNAMIC_CAST( B*, NEW( C, j ) ) failed \n";
+	//}
+
+	//auto tt = NEW( C, tt );
+	//A* t = DYNAMIC_CAST( A*, tt, t );
+	//if( t ) {
+	//	cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) succeded \n";
+	//	cout << "t->Name: "; t->PrintName();
+	//	cout << "t name : " << TYPEID( *t ).Name() << endl;
+	//	cout << "t hash : " << TYPEID( *t ).HashCode() << endl << endl;
+	//	delete t;
+	//} else {
+	//	cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) failed \n";
+	//}
+
+	auto ff = NEW( D, ff );
+	cout << sizeof( A ) << ' ' << sizeof( B ) << ' ' << sizeof( C ) << ' ' << sizeof( D ) << endl;
+	cout << sizeof( "A" ) << ' ' << sizeof( "B" ) << ' ' << sizeof( "C" ) << ' ' << sizeof( "D" ) << endl;
+	//cout << ff << ' ' << sizeof( *ff ) << endl;
+	//for( int i = 0; i < 10; i++ ) {
+	//	cout << ff + i << ' ' << *( (int*)ff + i ) << endl;
+	//}
+	//ff->PrintName();
+	// 00D00910 - начало объекта и начало A
+	// 00В0092С - начало B
+	// 
+	//
+	//
+
+
+	////bool flag = ( RTTI.find( string("ff") ) != RTTI.end() );
+	////string name = ( RTTI.find( string("ff") )->second ).Name();
+	////bool falg = ( ANCESTORS[( RTTI.find( string( "ff" ) )->second ).Name()].find( string( "B*" ) ) != ANCESTORS[( RTTI.find( string( "ff" ) )->second ).Name()].end() );
+	////bool glaf = regObj( string( "ff" ), string( "f" ) );
+	//B* f = DYNAMIC_CAST( B*, ff, f );
+	//if( f ) {
+	//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( D, f ) ) succeded \n";
+	//	cout << "f->Name: "; f->PrintName();
+	//	cout << "f name : " << TYPEID( *f ).Name() << endl;
+	//	cout << "f ptr : " << f << endl;
+	//	cout << "sizeof(f) : " << sizeof( *f ) << endl << endl;
+	//	//cout << "f hash : " << TYPEID( *f ).HashCode() << endl << endl;
+	//	//delete f;
+	//} else {
+	//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( D, f ) ) failed \n";
+	//}
+
+	//auto rr = NEW( D, rr );
+	C* r = DYNAMIC_CAST( C*, ff, r );
+	if( r ) {
+		cout << ff << ' ' << sizeof( *ff ) << endl;
+		cout << r << ' ' << sizeof( *r ) << endl;
+		cout << "C* r =  DYNAMIC_CAST( C*, NEW( D, r ) ) succeded \n";
+		cout << "r name : " << TYPEID( *r ).Name() << endl;
+		cout << "r ptr : " << r << endl;
+		cout << "sizeof(r) : " << sizeof( *r ) << endl << endl;
+		//delete r;
 	} else {
-		cout << "A* c =  DYNAMIC_CAST( A*, NEW( A, c ) ) failed \n";
-	}
-
-	auto dd = NEW( B, dd );
-	A* d = DYNAMIC_CAST( A*, dd, d );
-	//A* d = DYNAMIC_CAST( A*, NEW( B, d ) );
-	if( d ) {
-		cout << "A* d = DYNAMIC_CAST( A*, NEW( B, d ) ) \n";
-		cout << "d->Name: "; d->PrintName();
-		cout << "d name : " << TYPEID( *d ).Name() << endl;
-		cout << "d hash : " << TYPEID( *d ).HashCode() << endl << endl;
-		delete d;
-	} else {
-		cout << "A* d = DYNAMIC_CAST( A*, NEW( B, d ) ) failed \n";
-	}
-
-	auto ee = NEW( B, ee );
-	B* e = DYNAMIC_CAST( B*, ee, e );
-	//B* e = DYNAMIC_CAST( B*, NEW( B, e ) );
-	if( e ) {
-		cout << "B* e = DYNAMIC_CAST( B*, NEW( B, e ) ) succeded \n";
-		cout << "e->Name: "; e->PrintName();
-		cout << "e name : " << TYPEID( *e ).Name() << endl;
-		cout << "e hash : " << TYPEID( *e ).HashCode() << endl << endl;
-		delete e;
-	} else {
-		cout << "B* e = DYNAMIC_CAST( B*, NEW( B, e ) ) failed \n";
-	}
-
-	auto kk = NEW( C, kk );
-	C* k = DYNAMIC_CAST( C*, kk, k );
-	if( k ) {
-		cout << "C* k =  DYNAMIC_CAST( C*, NEW( C, k ) ) succeded \n";
-		cout << "k->Name: "; k->PrintName();
-		cout << "k name : " << TYPEID( *k ).Name() << endl;
-		cout << "k hash : " << TYPEID( *k ).HashCode() << endl << endl;
-		delete k;
-	} else {
-		cout << "C* k =  DYNAMIC_CAST( C*, NEW( C, k ) ) failed \n";
-	}
-
-	auto jj = NEW( C, jj );
-	B* j = DYNAMIC_CAST( B*, jj, j );
-	if( j ) {
-		cout << "B* j =  DYNAMIC_CAST( B*, NEW( C, j ) ) succeded \n";
-		cout << "j->Name: "; j->PrintName();
-		cout << "j name : " << TYPEID( *j ).Name() << endl;
-		cout << "j hash : " << TYPEID( *j ).HashCode() << endl << endl;
-		delete j;
-	} else {
-		cout << "B* j =  DYNAMIC_CAST( B*, NEW( C, j ) ) failed \n";
-	}
-
-	auto tt = NEW( C, tt );
-	A* t = DYNAMIC_CAST( A*, tt, t );
-	if( t ) {
-		cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) succeded \n";
-		cout << "t->Name: "; t->PrintName();
-		cout << "t name : " << TYPEID( *t ).Name() << endl;
-		cout << "t hash : " << TYPEID( *t ).HashCode() << endl << endl;
-		delete t;
-	} else {
-		cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) failed \n";
+		cout << "C* r =  DYNAMIC_CAST( C*, NEW( D, r ) ) failed \n";
 	}
 
 	//------------------------------------------------------------------------------------------
@@ -480,13 +536,13 @@ int main()
 	//notFun(); cout << endl;
 
 	//withRTTI(); cout << endl;
-	//withoutRTTI(); cout << endl; //<-закомменченные методы должны падать и собственно падают
+	withoutRTTI(); cout << endl; //<-закомменченные методы должны падать и собственно падают
 
 	//veryNotFun();
 
 	//trash();
 
-	smthelse();
+	//smthelse();
 
 	system( "pause" );
 	return 0;

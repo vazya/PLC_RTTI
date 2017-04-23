@@ -13,10 +13,50 @@ struct TypeInfo {
 	
 	string name;
 };
+TypeInfo TypeId( string objName );
+
 
 static map<string, TypeInfo> RTTI;
 static map<string, set<string>> ANCESTORS;
-static map<string, vector<string>> ANCESTORSORDER;
+static map<string, vector<string>> ANCESTORSORDERS;
+static map<string, int> SIZEOFTYPES;
+
+static void regAncestorsOrder( string derived, vector<string> base )
+{
+	if( ANCESTORSORDERS.find( derived ) == ANCESTORSORDERS.end() ) {
+		ANCESTORSORDERS.insert( pair<string, vector<string>>( derived, base ) );
+	} else {
+		cout << "ERROR in regAncestorsOrder! Double order defenition for " << derived << endl;
+	}
+}
+
+int stride( string objName, string typeName )
+{
+	typeName.erase( typeName.size() - 1 );
+	cout << "objName = " << objName << " typeName = " << typeName << endl;
+	
+	string objType( TypeId( objName ).Name() );
+
+	auto it = ANCESTORSORDERS.find( objType );
+	if( it == ANCESTORSORDERS.end() ) {
+		cout << "ERROR in stride! Can't find objName!" << endl;
+		return 0;
+	}
+	vector<string> ancestorsOrder( it->second );
+	int matchParent = 0;
+	for( int i = 0; i < ancestorsOrder.size(); i++ ) {
+		if( typeName == ancestorsOrder[i] ) {
+			matchParent = i;
+		}
+	}
+	int byteShift = 0;
+	if( matchParent != 0 ) {
+		string parent = ancestorsOrder[matchParent];
+		byteShift = sizeof( parent );
+	}
+	int shift = byteShift / sizeof( int );
+	return byteShift / sizeof(int);
+}
 
 static void regAncestors( string derived, string base )
 {
@@ -65,6 +105,12 @@ static T* newObj( string typeName, string objName )
 #define DYNAMIC_CAST( T, o, n ) ( assert( RTTI.find( (#o) ) != RTTI.end() ),\
 assert( ANCESTORS[(RTTI.find( (#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( (#o) )->second).Name()].end() ),\
 assert( regObj( (#o), (#n) ) ),\
-reinterpret_cast<T>( o ) )
+reinterpret_cast<T>( o + stride( (#o), (#T) ) ) )
+
+//#define DYNAMIC_CAST( T, o, n ) ( assert( RTTI.find( (#o) ) != RTTI.end() ),\
+//assert( ANCESTORS[(RTTI.find( (#o) )->second).Name()].find( (#T) ) != ANCESTORS[(RTTI.find( (#o) )->second).Name()].end() ),\
+//assert( regObj( (#o), (#n) ) ),\
+//reinterpret_cast<T>( o ) )
 
 #define EXTEND( D, B ) regAncestors( (#D), (#B) )
+#define EXTENDORDER(D, B) regAncestorsOrder( (#D), B )
