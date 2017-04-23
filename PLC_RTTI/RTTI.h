@@ -21,25 +21,35 @@ static map<string, set<string>> ANCESTORS;
 static map<string, vector<string>> ANCESTORSORDERS;
 static map<string, int> SIZEOFTYPES;
 
-static void regAncestorsOrder( string derived, vector<string> base )
+template<typename T>
+static void regAncestorsOrder( string derived, string base )
 {
-	if( ANCESTORSORDERS.find( derived ) == ANCESTORSORDERS.end() ) {
-		ANCESTORSORDERS.insert( pair<string, vector<string>>( derived, base ) );
+	auto it = ANCESTORSORDERS.find( derived );
+	vector<string> ancestorsoOrders;
+	if( it == ANCESTORSORDERS.end() ) {
+		ANCESTORSORDERS.insert( pair<string, vector<string>>( derived, vector<string>( { base } ) ) );
 	} else {
-		cout << "ERROR in regAncestorsOrder! Double order defenition for " << derived << endl;
+		it->second.push_back( base );
 	}
+	SIZEOFTYPES.insert( pair<string, int>( base, sizeof( T ) ) );
+}
+
+int getSizeOfType( string typeName )
+{
+	auto it = SIZEOFTYPES.find( typeName );
+	if( it == SIZEOFTYPES.end() ) {
+		cout << "ERROR in getSizeOfType! Can't find typeName" << endl;
+	}
+	return it->second;
 }
 
 int stride( string objName, string typeName )
 {
-	typeName.erase( typeName.size() - 1 );
-	cout << "objName = " << objName << " typeName = " << typeName << endl;
-	
+	typeName.erase( typeName.size() - 1 );	
 	string objType( TypeId( objName ).Name() );
 
 	auto it = ANCESTORSORDERS.find( objType );
 	if( it == ANCESTORSORDERS.end() ) {
-		cout << "ERROR in stride! Can't find objName!" << endl;
 		return 0;
 	}
 	vector<string> ancestorsOrder( it->second );
@@ -52,7 +62,7 @@ int stride( string objName, string typeName )
 	int byteShift = 0;
 	if( matchParent != 0 ) {
 		string parent = ancestorsOrder[matchParent];
-		byteShift = sizeof( parent );
+		byteShift = getSizeOfType( parent );
 	}
 	int shift = byteShift / sizeof( int );
 	return byteShift / sizeof(int);
@@ -113,4 +123,4 @@ reinterpret_cast<T>( o + stride( (#o), (#T) ) ) )
 //reinterpret_cast<T>( o ) )
 
 #define EXTEND( D, B ) regAncestors( (#D), (#B) )
-#define EXTENDORDER(D, B) regAncestorsOrder( (#D), B )
+#define EXTENDORDER(D, B) regAncestorsOrder<B>( (#D), (#B) )
