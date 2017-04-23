@@ -22,7 +22,7 @@ public:
 	virtual ~B() {}
 };
 
-class C: public B {
+class C : public B {
 public:
 	C() { c = 'C'; cout << "C constructor \n"; }
 	//void PrintName() { cout << "C" << endl; }
@@ -30,6 +30,16 @@ public:
 	virtual void PrintName() { cout << c << c << c << endl; }
 	virtual ~C() {}
 };
+
+class D : public B, public C {
+public:
+	D() { B::c = 'BD'; C::c = 'CD'; cout << "D constructor \n"; }
+	//void PrintName() { cout << "C" << endl; }
+	//~C() {}
+	virtual void PrintName() { cout << B::c << B::c << C::c << C::c << endl; }
+	virtual ~D() {}
+};
+
 
 void fun()
 {
@@ -167,7 +177,7 @@ void withRTTI()
 	B* f( 0 );
 	try {
 		//f = dynamic_cast< B* >( new A() );
-	} 
+	}
 	catch( exception& e ) {
 		cout << "Exception: " << e.what() << endl;
 	}
@@ -180,6 +190,8 @@ void withRTTI()
 	} else {
 		cout << "B* f = dynamic_cast<B*>( new A() ) failed \n";
 	}
+
+
 }
 
 void withoutRTTI()
@@ -267,54 +279,54 @@ void withoutRTTI()
 		cout << "A* t =  DYNAMIC_CAST( A*, NEW( C, t ) ) failed \n";
 	}
 
-//------------------------------------------------------------------------------------------
-// дальше идут касты которые нельзя делать, соответственно они падают
+	//------------------------------------------------------------------------------------------
+	// дальше идут касты которые нельзя делать, соответственно они падают
 
-	//auto ff = NEW( A, ff );
-	//B* f( 0 );
-	//try {
-	//	f = DYNAMIC_CAST( B*, ff ); // так нельзя
-	//}
-	//catch( exception& e ) {
-	//	cout << "Exception: " << e.what() << endl;
-	//}
-	//if( f ) {
-	//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( A, f ) ) succeded \n";
-	//	cout << "f->Name: "; f->PrintName();
-	//	cout << "f name : " << TYPEID( *f ).Name() << endl;
-	//	cout << "f hash : " << TYPEID( *f ).HashCode() << endl << endl;
-	//	delete f;
-	//} else {
-	//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( A, f ) ) failed \n";
-	//}
+		//auto ff = NEW( A, ff );
+		//B* f( 0 );
+		//try {
+		//	f = DYNAMIC_CAST( B*, ff ); // так нельзя
+		//}
+		//catch( exception& e ) {
+		//	cout << "Exception: " << e.what() << endl;
+		//}
+		//if( f ) {
+		//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( A, f ) ) succeded \n";
+		//	cout << "f->Name: "; f->PrintName();
+		//	cout << "f name : " << TYPEID( *f ).Name() << endl;
+		//	cout << "f hash : " << TYPEID( *f ).HashCode() << endl << endl;
+		//	delete f;
+		//} else {
+		//	cout << "B* f =  DYNAMIC_CAST( B*, NEW( A, f ) ) failed \n";
+		//}
 
-	//auto gg = NEW( A, gg );
-	////auto it = RTTI.find( "gg" );
-	////assert( it != RTTI.end() );
-	////auto iter = ANCESTORS[( RTTI.find( ( "gg" ) )->second ).Name()].find( ( "C*" ) );
-	////assert( iter != ANCESTORS[( RTTI.find( ( "gg" ) )->second ).Name()].end() );
-	//C* g = DYNAMIC_CAST( C*, gg ); // так нельзя
-	//if( g ) {
-	//	cout << "C* g =  DYNAMIC_CAST( C*, NEW( A, g ) ) succeded \n";
-	//	cout << "g->Name: "; g->PrintName();
-	//	cout << "g name : " << TYPEID( *g ).Name() << endl;
-	//	cout << "g hash : " << TYPEID( *g ).HashCode() << endl << endl;
-	//	delete g;
-	//} else {
-	//	cout << "C* g =  DYNAMIC_CAST( C*, NEW( A, g ) ) failed \n";
-	//}
+		//auto gg = NEW( A, gg );
+		////auto it = RTTI.find( "gg" );
+		////assert( it != RTTI.end() );
+		////auto iter = ANCESTORS[( RTTI.find( ( "gg" ) )->second ).Name()].find( ( "C*" ) );
+		////assert( iter != ANCESTORS[( RTTI.find( ( "gg" ) )->second ).Name()].end() );
+		//C* g = DYNAMIC_CAST( C*, gg ); // так нельзя
+		//if( g ) {
+		//	cout << "C* g =  DYNAMIC_CAST( C*, NEW( A, g ) ) succeded \n";
+		//	cout << "g->Name: "; g->PrintName();
+		//	cout << "g name : " << TYPEID( *g ).Name() << endl;
+		//	cout << "g hash : " << TYPEID( *g ).HashCode() << endl << endl;
+		//	delete g;
+		//} else {
+		//	cout << "C* g =  DYNAMIC_CAST( C*, NEW( A, g ) ) failed \n";
+		//}
 
-	//auto hh = NEW( B, hh );
-	//C* h = DYNAMIC_CAST( C*, hh );
-	//if( h ) {
-	//	cout << "C* h =  DYNAMIC_CAST( C*, NEW( B, h ) ) succeded \n";
-	//	cout << "h->Name: "; h->PrintName();
-	//	cout << "h name : " << TYPEID( *h ).Name() << endl;
-	//	cout << "h hash : " << TYPEID( *h ).HashCode() << endl << endl;
-	//	delete h;
-	//} else {
-	//	cout << "C* h =  DYNAMIC_CAST( C*, NEW( B, h ) ) failed \n";
-	//}
+		//auto hh = NEW( B, hh );
+		//C* h = DYNAMIC_CAST( C*, hh );
+		//if( h ) {
+		//	cout << "C* h =  DYNAMIC_CAST( C*, NEW( B, h ) ) succeded \n";
+		//	cout << "h->Name: "; h->PrintName();
+		//	cout << "h name : " << TYPEID( *h ).Name() << endl;
+		//	cout << "h hash : " << TYPEID( *h ).HashCode() << endl << endl;
+		//	delete h;
+		//} else {
+		//	cout << "C* h =  DYNAMIC_CAST( C*, NEW( B, h ) ) failed \n";
+		//}
 
 }
 
@@ -364,17 +376,118 @@ void f()
 	cout << typeid( dynamic_cast< A* >( new B ) ).name() << endl;
 }
 
+void trash()
+{
+	class Base0 {
+		int field0;
+		virtual int get()
+		{
+			return field0;
+		}
+	};
+
+	class BaseA : public Base0 {
+		int fieldA;
+		virtual int get()
+		{
+			return fieldA;
+		}
+	};
+
+	class BaseB : public Base0 {
+		int fieldB;
+		virtual int get()
+		{
+			return fieldB;
+		}
+	};
+
+	class Derived : public BaseA, public BaseB {
+		int fieldD;
+		virtual int get()
+		{
+			return fieldD;
+		}
+	};
+
+	class D : public Derived {
+		int filed;
+		virtual int get()
+		{
+			return filed;
+		}
+	};
+
+	Derived* pDer = new Derived;
+	BaseA* pBaseA = pDer;
+	BaseB* pBaseB = pDer;
+
+	if( pDer ) {
+		cout << "pDer name : " << typeid( *pDer ).name() << " " << pDer << endl;
+	}
+	if( pBaseA ) {
+		cout << "pBaseA name : " << typeid( *pBaseA ).name() << " " << pBaseA << endl;
+	}
+	if( pBaseB ) {
+		cout << "pBaseB name : " << typeid( *pBaseB ).name() << " " << pBaseB << endl;
+	}
+
+	Derived* ptrA = new Derived;
+
+	if( ptrA ) {
+		cout << "ptrA name : " << typeid( *ptrA ).name() << " " << ptrA << endl;
+	}
+
+	BaseA* ptrD = dynamic_cast< BaseA* >( ptrA );
+	if( ptrD ) {
+		cout << "ptrD name : " << typeid( *ptrD ).name() << " " << ptrD << endl;
+	} else {
+		cout << "BaseA* ptrD = dynamic_cast< BaseA* >( ptrA ); failed" << endl;
+	}
+
+	BaseB* ptrDD = dynamic_cast< BaseB* >( ptrA );
+	if( ptrDD ) {
+		cout << "ptrDD name : " << typeid( *ptrDD ).name() << " " << ptrDD << endl;
+	} else {
+		cout << "BaseB* ptrDD = dynamic_cast< BaseB* >( ptrA ); failed" << endl;
+	}
+
+	cout << sizeof( BaseA ) << endl;
+	cout << sizeof( BaseB ) << endl;
+	cout << sizeof( *ptrA ) << endl;
+
+	//D* pDer = new D;
+	//BaseA* pBaseA = pDer;
+	//BaseB* pBaseB = pDer;
+	//Derived* pDerived = pDer;
+
+	//cout << "pDer = " << pDer << endl;
+	//cout << "pBaseA = " << pBaseA << endl;
+	//cout << "pBaseB = " << pBaseB << endl;
+	//cout << "pDerived = " << pDerived << endl;
+}
+
+void smthelse()
+{
+
+}
+
 int main()
 {
 	//f();
-	
+
 	//fun(); cout << endl;
 	//notFun(); cout << endl;
 
-	withRTTI(); cout << endl;
-	withoutRTTI(); cout << endl; //<-закомменченные методы должны падать и собственно падают
-	
+	//withRTTI(); cout << endl;
+	//withoutRTTI(); cout << endl; //<-закомменченные методы должны падать и собственно падают
+
 	//veryNotFun();
+
+	//trash();
+
+	smthelse();
+
 	system( "pause" );
 	return 0;
 }

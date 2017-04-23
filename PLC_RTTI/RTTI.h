@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
+#include <vector>
 #include <set>
 #include <cassert>
 using namespace std;
@@ -15,6 +16,7 @@ struct TypeInfo {
 
 static map<string, TypeInfo> RTTI;
 static map<string, set<string>> ANCESTORS;
+static map<string, vector<string>> ANCESTORSORDER;
 
 static void regAncestors( string derived, string base )
 {
